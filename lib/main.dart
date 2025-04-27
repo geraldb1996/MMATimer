@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'; // <-- Add this import
 import 'workout.dart';
 
 void main() {
@@ -66,8 +67,7 @@ class MainScreen extends StatelessWidget {
                                 ],
                               ),
                             );
-                          } 
-                          else if (title == "Exit") {
+                          } else if (title == "Exit") {
                             showDialog(
                               context: context,
                               builder: (context) => AlertDialog(
@@ -79,22 +79,22 @@ class MainScreen extends StatelessWidget {
                                     child: Text("Cancel"),
                                   ),
                                   ElevatedButton(
-                                    onPressed: () => Navigator.pop(context),
+                                    onPressed: () {
+                                      SystemNavigator.pop();
+                                    },
                                     child: Text("Yes"),
                                   ),
                                 ],
                               ),
                             );
-                          }
-                          else if (title == "Workout") {
+                          } else if (title == "Workout") {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => const WorkoutScreen(),
                               ),
                             );
-                          }
-                          else if (title == "Settings") {
+                          } else if (title == "Settings") {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -104,8 +104,7 @@ class MainScreen extends StatelessWidget {
                                 ),
                               ),
                             );
-                          }
-                          else {
+                          } else {
                             print('$title button pressed');
                           }
                         },
