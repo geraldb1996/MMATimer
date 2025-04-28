@@ -25,3 +25,5 @@ com.example.mmatimer.app-resValues-23 /home/geraldb1996/Documentos/Flutter Proje
 com.example.mmatimer.app-packageDebugResources-24 /home/geraldb1996/Documentos/Flutter Projects/MMATimer/build/app/intermediates/incremental/debug/packageDebugResources/merged.dir
 com.example.mmatimer.app-packageDebugResources-25 /home/geraldb1996/Documentos/Flutter Projects/MMATimer/build/app/intermediates/incremental/debug/packageDebugResources/stripped.dir
 com.example.mmatimer.app-debug-26 /home/geraldb1996/Documentos/Flutter Projects/MMATimer/build/app/intermediates/merged_res/debug/mergeDebugResources
+com.example.mmatimer.app-debug-27 /home/geraldb1996/Documentos/Flutter Projects/MMATimer/build/audioplayers_android/intermediates/packaged_res/debug/packageDebugResources
+com.example.mmatimer.app-debug-28 /home/geraldb1996/Documentos/Flutter Projects/MMATimer/build/path_provider_android/intermediates/packaged_res/debug/packageDebugResources

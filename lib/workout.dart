@@ -1,69 +1,38 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'global.dart';
 
 class WorkoutScreen extends StatefulWidget {
-  const WorkoutScreen({super.key});
+  const WorkoutScreen({Key? key}) : super(key: key);
 
   @override
-  State<WorkoutScreen> createState() => _WorkoutScreenState();
+  _WorkoutScreenState createState() => _WorkoutScreenState();
 }
 
 class _WorkoutScreenState extends State<WorkoutScreen> {
-  final roundsController = TextEditingController(text: globalNumberOfRounds.toString());
+  // Initialize controllers and fields with global values.
+  late final TextEditingController roundsController;
   int roundMinutes = globalRoundMinutes;
   int roundSeconds = globalRoundSeconds;
   int restMinutes = globalRestMinutes;
   int restSeconds = globalRestSeconds;
 
-  List<int> minutesSeconds = List.generate(60, (i) => i); // 0-59
+  List<int> minutesSeconds = List.generate(60, (i) => i);
 
   @override
-  void dispose() {
-    roundsController.dispose();
-    super.dispose();
-  }
-
-  Widget buildDropdown(String label, int value, List<int> items, ValueChanged<int?> onChanged) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6.0),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-        decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.9),
-          borderRadius: BorderRadius.circular(4),
-        ),
-        child: Row(
-          children: [
-            Expanded(flex: 2, child: Text(label)),
-            const SizedBox(width: 10),
-            Expanded(
-              flex: 3,
-              child: DropdownButton<int>(
-                isExpanded: true,
-                value: value,
-                items: items.map((val) => DropdownMenuItem(
-                  value: val,
-                  child: Align(
-                    alignment: Alignment.centerRight,
-                    child: Text(val.toString()),
-                  ),
-                )).toList(),
-                onChanged: onChanged,
-                underline: const SizedBox(),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+  void initState() {
+    super.initState();
+    roundsController =
+        TextEditingController(text: globalNumberOfRounds.toString());
   }
 
   Widget buildNumberInput(String label, TextEditingController controller) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6.0),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+        padding:
+            const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
         decoration: BoxDecoration(
           color: Colors.white.withOpacity(0.9),
           borderRadius: BorderRadius.circular(4),
@@ -89,15 +58,60 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
     );
   }
 
+  Widget buildDropdown(
+      String label, int value, List<int> items, ValueChanged<int?> onChanged) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6.0),
+      child: Container(
+        padding:
+            const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.9),
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: Row(
+          children: [
+            Expanded(flex: 2, child: Text(label)),
+            const SizedBox(width: 10),
+            Expanded(
+              flex: 3,
+              child: DropdownButton<int>(
+                isExpanded: true,
+                value: value,
+                items: items
+                    .map((val) => DropdownMenuItem(
+                          value: val,
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: Text(val.toString()),
+                          ),
+                        ))
+                    .toList(),
+                onChanged: onChanged,
+                underline: const SizedBox(),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   int getRounds() {
     final value = int.tryParse(roundsController.text) ?? 1;
     return value < 1 ? 1 : value;
   }
 
   @override
+  void dispose() {
+    roundsController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Workout")),
+      appBar: AppBar(title: const Text("Workout Settings")),
       body: Stack(
         children: [
           // Background image
@@ -116,29 +130,36 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
                 shrinkWrap: true,
                 children: [
                   buildNumberInput("Number of Rounds", roundsController),
-                  buildDropdown("Round Minutes", roundMinutes, minutesSeconds, (val) => setState(() => roundMinutes = val!)),
-                  buildDropdown("Round Seconds", roundSeconds, minutesSeconds, (val) => setState(() => roundSeconds = val!)),
-                  buildDropdown("Rest Minutes", restMinutes, minutesSeconds, (val) => setState(() => restMinutes = val!)),
-                  buildDropdown("Rest Seconds", restSeconds, minutesSeconds, (val) => setState(() => restSeconds = val!)),
+                  buildDropdown("Round Minutes", roundMinutes, minutesSeconds,
+                      (val) => setState(() => roundMinutes = val!)),
+                  buildDropdown("Round Seconds", roundSeconds, minutesSeconds,
+                      (val) => setState(() => roundSeconds = val!)),
+                  buildDropdown("Rest Minutes", restMinutes, minutesSeconds,
+                      (val) => setState(() => restMinutes = val!)),
+                  buildDropdown("Rest Seconds", restSeconds, minutesSeconds,
+                      (val) => setState(() => restSeconds = val!)),
                   const SizedBox(height: 50),
                   ElevatedButton(
                     onPressed: () {
-                      // Update global variables with current selections
+                      // Update global variables so that they persist next time.
                       globalNumberOfRounds = getRounds();
                       globalRoundMinutes = roundMinutes;
                       globalRoundSeconds = roundSeconds;
                       globalRestMinutes = restMinutes;
                       globalRestSeconds = restSeconds;
-    
-                      Navigator.push(context, MaterialPageRoute(
-                        builder: (context) => CountdownScreen(
-                          totalRounds: globalNumberOfRounds,
-                          roundMinutes: globalRoundMinutes,
-                          roundSeconds: globalRoundSeconds,
-                          restMinutes: globalRestMinutes,
-                          restSeconds: globalRestSeconds,
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CountdownScreen(
+                            totalRounds: getRounds(),
+                            roundMinutes: roundMinutes,
+                            roundSeconds: roundSeconds,
+                            restMinutes: restMinutes,
+                            restSeconds: restSeconds,
+                          ),
                         ),
-                      ));
+                      );
                     },
                     child: const Text("Start"),
                   ),
@@ -152,6 +173,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
   }
 }
 
+// CountdownScreen remains the same.
 class CountdownScreen extends StatefulWidget {
   final int totalRounds;
   final int roundMinutes;
@@ -177,65 +199,110 @@ class _CountdownScreenState extends State<CountdownScreen> {
   late bool isRoundPhase;
   late int remainingSeconds;
   Timer? timer;
+  late AudioPlayer _audioPlayer;
+  bool isPaused = false;
 
-  int get roundTotalSeconds => widget.roundMinutes * 60 + widget.roundSeconds;
-  int get restTotalSeconds => widget.restMinutes * 60 + widget.restSeconds;
+  int get roundTotalSeconds =>
+      widget.roundMinutes * 60 + widget.roundSeconds;
+  int get restTotalSeconds =>
+      widget.restMinutes * 60 + widget.restSeconds;
 
   @override
   void initState() {
     super.initState();
+    _audioPlayer = AudioPlayer();
     currentRound = 1;
     isRoundPhase = true;
     remainingSeconds = roundTotalSeconds;
+    // Play bell at the start of the first round.
+    playBell();
     startTimer();
+  }
+
+  void playBell() {
+    _audioPlayer.play(AssetSource('lib/sounds/sndBell.wav'));
+  }
+
+  void playHorn() {
+    _audioPlayer.play(AssetSource('lib/sounds/sndHorn.wav'));
   }
 
   void startTimer() {
     timer = Timer.periodic(const Duration(seconds: 1), (Timer t) {
       setState(() {
-        if (remainingSeconds > 0) {
-          remainingSeconds--;
-        } else {
-          if (isRoundPhase) {
-            if (currentRound == widget.totalRounds) {
-              timer?.cancel();
-              showDialog(
-                context: context,
-                builder: (_) => AlertDialog(
-                  title: const Text("Workout Finished"),
-                  actions: [
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).popUntil((route) => route.isFirst);
-                      },
-                      child: const Text("OK"),
-                    ),
-                  ],
-                ),
-              );
-            } else {
-              if (restTotalSeconds > 0) {
-                isRoundPhase = false;
-                remainingSeconds = restTotalSeconds;
-              } else {
-                currentRound++;
-                isRoundPhase = true;
-                remainingSeconds = roundTotalSeconds;
-              }
-            }
+        if (!isPaused) {
+          if (remainingSeconds > 0) {
+            remainingSeconds--;
           } else {
-            currentRound++;
-            isRoundPhase = true;
-            remainingSeconds = roundTotalSeconds;
+            if (isRoundPhase) {
+              // End of round - play horn sound.
+              playHorn();
+              if (currentRound == widget.totalRounds) {
+                timer?.cancel();
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text("Workout Finished"),
+                    actions: [
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context)
+                              .popUntil((route) => route.isFirst);
+                        },
+                        child: const Text("OK"),
+                      ),
+                    ],
+                  ),
+                );
+              } else {
+                if (restTotalSeconds > 0) {
+                  // Switch to rest phase.
+                  isRoundPhase = false;
+                  remainingSeconds = restTotalSeconds;
+                } else {
+                  // No rest phase; immediately start next round.
+                  currentRound++;
+                  playBell();
+                  isRoundPhase = true;
+                  remainingSeconds = roundTotalSeconds;
+                }
+              }
+            } else {
+              // End of rest phase: start next round.
+              currentRound++;
+              playBell();
+              isRoundPhase = true;
+              remainingSeconds = roundTotalSeconds;
+            }
           }
         }
       });
     });
   }
 
+  void pauseTimer() {
+    setState(() {
+      isPaused = true;
+    });
+    timer?.cancel();
+  }
+
+  void resumeTimer() {
+    setState(() {
+      isPaused = false;
+    });
+    startTimer();
+  }
+
+  void stopTimer() {
+    timer?.cancel();
+    Navigator.pop(context);
+  }
+
   @override
   void dispose() {
     timer?.cancel();
+    _audioPlayer.dispose();
     super.dispose();
   }
 
@@ -254,11 +321,41 @@ class _CountdownScreenState extends State<CountdownScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('Round $currentRound of ${widget.totalRounds}', style: const TextStyle(fontSize: 24)),
+            Text(
+              'Round $currentRound of ${widget.totalRounds}',
+              style: const TextStyle(fontSize: 24),
+            ),
             const SizedBox(height: 20),
-            Text('$phaseText Phase', style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
+            Text(
+              '$phaseText Phase',
+              style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 20),
-            Text(formatTime(remainingSeconds), style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold)),
+            Text(
+              formatTime(remainingSeconds),
+              style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 30),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    if (isPaused) {
+                      resumeTimer();
+                    } else {
+                      pauseTimer();
+                    }
+                  },
+                  child: Text(isPaused ? 'Resume' : 'Pause'),
+                ),
+                const SizedBox(width: 20),
+                ElevatedButton(
+                  onPressed: stopTimer,
+                  child: const Text("Stop"),
+                ),
+              ],
+            ),
           ],
         ),
       ),
