@@ -1,8 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart'; // For SystemNavigator.pop()
-import 'workout.dart';
-import 'timer.dart';
 
 class TimerScreen extends StatefulWidget {
   const TimerScreen({Key? key}) : super(key: key);

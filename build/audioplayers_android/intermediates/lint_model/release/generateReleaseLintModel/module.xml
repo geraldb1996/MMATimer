@@ -1,0 +1,26 @@
+<lint-module
+    format="1"
+    dir="/home/geraldb1996/.pub-cache/hosted/pub.dev/audioplayers_android-4.0.3/android"
+    name=":audioplayers_android"
+    type="LIBRARY"
+    maven="xyz.luan.audioplayers:audioplayers_android:1.0-SNAPSHOT"
+    agpVersion="8.7.0"
+    buildFolder="/home/geraldb1996/Documentos/Flutter Projects/MMATimer/build/audioplayers_android"
+    bootClassPath="/home/geraldb1996/Android/Sdk/platforms/android-33/android.jar:/home/geraldb1996/Android/Sdk/build-tools/34.0.0/core-lambda-stubs.jar"
+    javaSourceLevel="1.8"
+    compileTarget="android-33"
+    neverShrinking="true">
+  <lintOptions
+      disable="InvalidPackage"
+      abortOnError="true"
+      absolutePaths="true"
+      checkReleaseBuilds="true"
+      explainIssues="true">
+    <severities>
+      <severity
+        id="InvalidPackage"
+        severity="IGNORE" />
+    </severities>
+  </lintOptions>
+  <variant name="release"/>
+</lint-module>

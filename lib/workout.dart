@@ -28,25 +28,24 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
   }
 
   Widget buildNumberInput(String label, TextEditingController controller) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6.0),
+    return Center(
       child: Container(
-        padding:
-            const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+        width: 300, // Fixed width for centering
+        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
         decoration: BoxDecoration(
           color: Colors.white.withOpacity(0.9),
           borderRadius: BorderRadius.circular(4),
         ),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Expanded(flex: 2, child: Text(label)),
+            Text(label),
             const SizedBox(width: 10),
             Expanded(
-              flex: 3,
               child: TextField(
                 controller: controller,
                 keyboardType: TextInputType.number,
-                textAlign: TextAlign.right,
+                textAlign: TextAlign.center,
                 decoration: const InputDecoration(
                   border: InputBorder.none,
                 ),
@@ -58,13 +57,12 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
     );
   }
 
-  Widget buildDropdown(
-      String label, int value, List<int> items, ValueChanged<int?> onChanged) {
+  Widget buildDropdown(String label, int value, List<int> items, ValueChanged<int?> onChanged) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6.0),
       child: Container(
-        padding:
-            const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+        width: 300, // Fixed width for the dropdown field
+        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
         decoration: BoxDecoration(
           color: Colors.white.withOpacity(0.9),
           borderRadius: BorderRadius.circular(4),
@@ -76,19 +74,20 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
             Expanded(
               flex: 3,
               child: DropdownButton<int>(
-                isExpanded: true,
                 value: value,
-                items: items
-                    .map((val) => DropdownMenuItem(
-                          value: val,
-                          child: Align(
-                            alignment: Alignment.centerRight,
-                            child: Text(val.toString()),
-                          ),
-                        ))
-                    .toList(),
+                isExpanded: false,
+                items: items.map((val) {
+                  return DropdownMenuItem(
+                    value: val,
+                    // Center the dropdown menu item text.
+                    child: Center(child: Text(val.toString())),
+                  );
+                }).toList(),
                 onChanged: onChanged,
-                underline: const SizedBox(),
+                underline: Container(
+                  height: 1,
+                  color: Colors.black,
+                ),
               ),
             ),
           ],
@@ -138,7 +137,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
                       (val) => setState(() => restMinutes = val!)),
                   buildDropdown("Rest Seconds", restSeconds, minutesSeconds,
                       (val) => setState(() => restSeconds = val!)),
-                  const SizedBox(height: 50),
+                  const SizedBox(height: 10),
                   ElevatedButton(
                     onPressed: () {
                       // Update global variables so that they persist next time.

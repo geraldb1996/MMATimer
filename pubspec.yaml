@@ -55,6 +55,7 @@ flutter:
   assets:
     - lib/assets/background.jpg
     - lib/assets/workout.png
+    - lib/assets/b2.png
     - lib/sounds/sndBell.wav
     - lib/sounds/sndHorn.wav
   # The following line ensures that the Material Icons font is

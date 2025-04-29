@@ -3,6 +3,21 @@ import 'package:flutter/services.dart'; // For SystemNavigator.pop()
 import 'workout.dart';
 import 'timer.dart';
 
+void main() {
+  runApp(MMATimerApp());
+}
+
+class MMATimerApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'MMA Timer',
+      debugShowCheckedModeBanner: false,
+      home: MainScreen(),
+    );
+  }
+}
+
 class MainScreen extends StatelessWidget {
   final List<String> buttonTitles = [
     "Sparring",
@@ -22,7 +37,7 @@ class MainScreen extends StatelessWidget {
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('lib/assets/background.jpg'),
+                image: AssetImage('lib/assets/b2.png'),
                 fit: BoxFit.cover,
               ),
             ),
@@ -32,7 +47,9 @@ class MainScreen extends StatelessWidget {
             child: SingleChildScrollView(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: buttonTitles.map((title) => MainMenuButton(title: title)).toList(),
+                children: buttonTitles
+                    .map((title) => MainMenuButton(title: title))
+                    .toList(),
               ),
             ),
           ),
@@ -75,7 +92,8 @@ class MainMenuButton extends StatelessWidget {
                 context: context,
                 builder: (context) => AlertDialog(
                   title: const Text("Exit"),
-                  content: const Text("Are you sure you want to exit?"),
+                  content:
+                      const Text("Are you sure you want to exit?"),
                   actions: [
                     ElevatedButton(
                       onPressed: () => Navigator.pop(context),
@@ -110,16 +128,12 @@ class MainMenuButton extends StatelessWidget {
                 MaterialPageRoute(
                   builder: (context) => Scaffold(
                     appBar: AppBar(title: const Text("Settings")),
-                    body: const Center(
-                      child: Text("Settings Screen"),
-                    ),
+                    body: const Center(child: Text("Settings Screen")),
                   ),
                 ),
               );
             } else if (title == "Sparring") {
               // Add navigation for Sparring if needed.
-            } else {
-              print('$title button pressed');
             }
           },
           child: Text(title),
