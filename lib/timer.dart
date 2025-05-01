@@ -66,7 +66,7 @@ class _TimerScreenState extends State<TimerScreen> {
             Text(
               formatTime(elapsedSeconds),
               style:
-                  const TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
+                  const TextStyle(fontSize: 100, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 30),
             Row(

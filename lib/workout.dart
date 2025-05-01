@@ -27,74 +27,115 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
         TextEditingController(text: globalNumberOfRounds.toString());
   }
 
-  Widget buildNumberInput(String label, TextEditingController controller) {
-    return Center(
-      child: Container(
-        width: 300, // Fixed width for centering
-        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-        decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.9),
-          borderRadius: BorderRadius.circular(4),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(label),
-            const SizedBox(width: 10),
-            Expanded(
-              child: TextField(
-                controller: controller,
-                keyboardType: TextInputType.number,
-                textAlign: TextAlign.center,
-                decoration: const InputDecoration(
-                  border: InputBorder.none,
-                ),
-              ),
-            ),
-          ],
-        ),
+Widget buildNumberInput(String label, TextEditingController controller) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 8.0),
+    child: Container(
+      width: 300,
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.95),
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 6,
+            offset: Offset(0, 2),
+          ),
+        ],
       ),
-    );
-  }
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 2,
+            child: Text(
+              label,
+              style: TextStyle(fontWeight: FontWeight.w500),
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            flex: 3,
+            child: TextField(
+              controller: controller,
+              keyboardType: TextInputType.number,
+              textAlign: TextAlign.right,
+              decoration: const InputDecoration(
+                isCollapsed: true,
+                border: InputBorder.none,
+              ),
+              style: TextStyle(fontSize: 16),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
 
-  Widget buildDropdown(String label, int value, List<int> items, ValueChanged<int?> onChanged) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6.0),
-      child: Container(
-        width: 300, // Fixed width for the dropdown field
-        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-        decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.9),
-          borderRadius: BorderRadius.circular(4),
-        ),
-        child: Row(
-          children: [
-            Expanded(flex: 2, child: Text(label)),
-            const SizedBox(width: 10),
-            Expanded(
-              flex: 3,
+
+ Widget buildDropdown(
+  String label,
+  int value,
+  List<int> items,
+  ValueChanged<int?> onChanged,
+) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 8.0),
+    child: Container(
+      width: 300,
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.95),
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 6,
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 2,
+            child: Text(
+              label,
+              style: TextStyle(fontWeight: FontWeight.w500),
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            flex: 3,
+            child: DropdownButtonHideUnderline(
               child: DropdownButton<int>(
                 value: value,
-                isExpanded: false,
+                isExpanded: true,
+                dropdownColor: Colors.white,
+                style: TextStyle(color: Colors.black, fontSize: 16),
+                borderRadius: BorderRadius.circular(10),
+                menuMaxHeight: 200,
                 items: items.map((val) {
                   return DropdownMenuItem(
                     value: val,
-                    // Center the dropdown menu item text.
-                    child: Center(child: Text(val.toString())),
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: Text(val.toString()),
+                    ),
                   );
                 }).toList(),
                 onChanged: onChanged,
-                underline: Container(
-                  height: 1,
-                  color: Colors.black,
-                ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
+
+
 
   int getRounds() {
     final value = int.tryParse(roundsController.text) ?? 1;
@@ -117,7 +158,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('lib/assets/workout.png'),
+                image: AssetImage('lib/assets/b2.png'),
                 fit: BoxFit.cover,
               ),
             ),
@@ -332,7 +373,7 @@ class _CountdownScreenState extends State<CountdownScreen> {
             const SizedBox(height: 20),
             Text(
               formatTime(remainingSeconds),
-              style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 100, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 30),
             Row(
