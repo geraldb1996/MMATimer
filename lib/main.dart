@@ -2,58 +2,94 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; // For SystemNavigator.pop()
 import 'workout.dart';
 import 'timer.dart';
+import 'styles.dart';
 
 void main() {
-  runApp(MMATimerApp());
+  runApp(const MMATimerApp());
 }
 
 class MMATimerApp extends StatelessWidget {
+  const MMATimerApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'MMA Timer',
       debugShowCheckedModeBanner: false,
-      home: MainScreen(),
+      theme: ThemeData(
+        primaryColor: AppStyles.colorPrimario,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: AppStyles.colorPrimario,
+          primary: AppStyles.colorPrimario,
+          secondary: const Color.fromARGB(255, 0, 0, 0),
+          background: AppStyles.colorPrimario,
+          surface: AppStyles.colorGrisClaro,
+          onPrimary: AppStyles.colorGrisClaro,
+          onSecondary: AppStyles.colorPrimario,
+          onBackground: AppStyles.colorGrisClaro,
+          onSurface: AppStyles.colorPrimario,
+        ),
+        scaffoldBackgroundColor: AppStyles.colorPrimario,
+        textTheme: TextTheme(
+          headlineLarge: AppStyles.titulo,
+          titleLarge: AppStyles.subtitulo,
+        ),
+      ),
+      home: const MainScreen(),
     );
   }
 }
 
 class MainScreen extends StatelessWidget {
-  final List<String> buttonTitles = [
-    "Sparring",
-    "Timer",
-    "Workout",
-    "Settings",
-    "Info",
-    "Exit"
+  const MainScreen({Key? key}) : super(key: key);
+
+  final List<Map<String, String>> menuItems = const [
+    {"title": "Sparring", "icon": "🥊"},
+    {"title": "Timer", "icon": "⏱️"},
+    {"title": "Workout", "icon": "💪"},
+    {"title": "Settings", "icon": "⚙️"},
+    {"title": "Info", "icon": "ℹ️"},
+    {"title": "Exit", "icon": "🚪"},
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          // Background image.
-          Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('lib/assets/b2.png'),
-                fit: BoxFit.cover,
+      body: Container(
+        decoration: BoxDecoration(gradient: AppStyles.fondo),
+        child: SafeArea(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Text(
+                  'MMA Timer',
+                  style: AppStyles.titulo,
+                  textAlign: TextAlign.center,
+                ),
               ),
-            ),
-          ),
-          // Buttons overlay.
-          Center(
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: buttonTitles
-                    .map((title) => MainMenuButton(title: title))
-                    .toList(),
+              Expanded(
+                child: Center(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children:
+                          menuItems
+                              .map(
+                                (item) => MainMenuButton(
+                                  title: item['title']!,
+                                  icon: item['icon']!,
+                                ),
+                              )
+                              .toList(),
+                    ),
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -61,82 +97,84 @@ class MainScreen extends StatelessWidget {
 
 class MainMenuButton extends StatelessWidget {
   final String title;
+  final String icon;
 
-  const MainMenuButton({Key? key, required this.title}) : super(key: key);
+  const MainMenuButton({Key? key, required this.title, required this.icon})
+    : super(key: key);
+
+  void _handleNavigation(BuildContext context) {
+    switch (title) {
+      case "Sparring":
+        // TODO: Implementar pantalla de sparring
+        break;
+      case "Timer":
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const TimerScreen()),
+        );
+        break;
+      case "Workout":
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const WorkoutScreen()),
+        );
+        break;
+      case "Settings":
+        // TODO: Implementar pantalla de configuración
+        break;
+      case "Info":
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text("MMATimer"),
+            content: const Text("Gerald Bejarano, MMATimer beta 1.0.0"),
+            actions: [
+              ElevatedButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text("Accept"),
+              ),
+            ],
+          ),
+        );
+        break;
+      case "Exit":
+        SystemNavigator.pop();
+        break;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: SizedBox(
-        width: 200,
-        height: 50,
-        child: ElevatedButton(
-          onPressed: () {
-            if (title == "Info") {
-              showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: const Text("MMATimer"),
-                  content: const Text("Developed by Gerald Bejarano, v1"),
-                  actions: [
-                    ElevatedButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: const Text("Accept"),
-                    ),
-                  ],
-                ),
-              );
-            } else if (title == "Exit") {
-              showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: const Text("Exit"),
-                  content:
-                      const Text("Are you sure you want to exit?"),
-                  actions: [
-                    ElevatedButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: const Text("Cancel"),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        SystemNavigator.pop();
-                      },
-                      child: const Text("Yes"),
-                    ),
-                  ],
-                ),
-              );
-            } else if (title == "Timer") {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const TimerScreen(),
-                ),
-              );
-            } else if (title == "Workout") {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const WorkoutScreen(),
-                ),
-              );
-            } else if (title == "Settings") {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => Scaffold(
-                    appBar: AppBar(title: const Text("Settings")),
-                    body: const Center(child: Text("Settings Screen")),
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20.0),
+      child: Container(
+        decoration: AppStyles.tarjeta,
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: () => _handleNavigation(context),
+            borderRadius: BorderRadius.circular(20),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Text(icon, style: const TextStyle(fontSize: 24)),
+                      const SizedBox(width: 16),
+                      Text(title, style: AppStyles.subtitulo),
+                    ],
                   ),
-                ),
-              );
-            } else if (title == "Sparring") {
-              // Add navigation for Sparring if needed.
-            }
-          },
-          child: Text(title),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    color: AppStyles.colorSecundario,
+                    size: 20,
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
       ),
     );

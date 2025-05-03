@@ -1,4 +1,4 @@
-#Mon Apr 28 22:07:42 CST 2025
+#Thu May 01 22:21:54 CST 2025
 base.0=/home/geraldb1996/Documentos/Flutter Projects/MMATimer/build/app/intermediates/dex/release/minifyReleaseWithR8/classes.dex
 path.0=classes.dex
 renamed.0=classes.dex
