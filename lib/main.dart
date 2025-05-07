@@ -125,16 +125,17 @@ class MainMenuButton extends StatelessWidget {
       case "Info":
         showDialog(
           context: context,
-          builder: (context) => AlertDialog(
-            title: const Text("MMATimer"),
-            content: const Text("Gerald Bejarano, MMATimer beta 1.0.0"),
-            actions: [
-              ElevatedButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text("Accept"),
+          builder:
+              (context) => AlertDialog(
+                title: const Text("MMATimer"),
+                content: const Text("Gerald Bejarano, MMATimer beta 1.0.0"),
+                actions: [
+                  ElevatedButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text("Accept"),
+                  ),
+                ],
               ),
-            ],
-          ),
         );
         break;
       case "Exit":

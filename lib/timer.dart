@@ -59,7 +59,7 @@ class _TimerScreenState extends State<TimerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: AppStyles.colorSelection,
       body: Container(
         decoration: BoxDecoration(gradient: AppStyles.fondo),
         child: SafeArea(
@@ -82,7 +82,10 @@ class _TimerScreenState extends State<TimerScreen> {
                     ),
                     color: Colors.white.withOpacity(0.97),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 36),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 40,
+                        horizontal: 36,
+                      ),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -110,7 +113,8 @@ class _TimerScreenState extends State<TimerScreen> {
                                 label: 'Pausar',
                               ),
                               _buildTimerButton(
-                                onPressed: elapsedSeconds > 0 ? resetTimer : null,
+                                onPressed:
+                                    elapsedSeconds > 0 ? resetTimer : null,
                                 icon: Icons.refresh,
                                 label: 'Reiniciar',
                               ),
@@ -139,14 +143,14 @@ class _TimerScreenState extends State<TimerScreen> {
       children: [
         ElevatedButton(
           style: AppStyles.gymButton.copyWith(
-            backgroundColor: MaterialStateProperty.resolveWith<Color>(
-              (Set<MaterialState> states) {
-                if (states.contains(MaterialState.disabled)) {
-                  return Colors.grey.shade400;
-                }
-                return AppStyles.colorSecundario;
-              },
-            ),
+            backgroundColor: MaterialStateProperty.resolveWith<Color>((
+              Set<MaterialState> states,
+            ) {
+              if (states.contains(MaterialState.disabled)) {
+                return Colors.grey.shade400;
+              }
+              return AppStyles.colorSecundario;
+            }),
             foregroundColor: MaterialStateProperty.all(AppStyles.colorPrimario),
             padding: MaterialStateProperty.all(const EdgeInsets.all(18)),
           ),

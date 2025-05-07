@@ -3,9 +3,15 @@ import 'package:flutter/material.dart';
 class AppStyles {
   // Colores principales de la aplicación
   static const Color colorPrimario = Color(0xFF1A1A1A); // Negro principal
-  static const Color colorSecundario = Color(0xFFFFD700); // Amarillo
+  static const Color colorSecundario = Color.fromARGB(
+    255,
+    97,
+    97,
+    97,
+  ); // Amarillo
   static const Color colorGrisClaro = Color(0xFFF5F5F5); // Gris claro
   static const Color colorGrisOscuro = Color(0xFF333333); // Gris oscuro
+  static const Color colorSelection = Color.fromARGB(255, 29, 1, 185);
 
   // Estilo del título principal
   static const TextStyle titulo = TextStyle(

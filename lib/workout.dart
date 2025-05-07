@@ -168,21 +168,27 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
                     ),
                     color: Colors.white.withOpacity(0.97),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 28, horizontal: 22),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 28,
+                        horizontal: 22,
+                      ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          _sectionHeader(Icons.fitness_center, 'Número de Rounds'),
+                          _sectionHeader(
+                            Icons.fitness_center,
+                            'Número de Rounds',
+                          ),
                           buildNumberInput('Rounds', roundsController),
                           const Divider(height: 32, thickness: 1.2),
                           _sectionHeader(Icons.timer, 'Tiempo de Round'),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              buildTimeDropdown('Minutos', roundMinutes, (value) {
+                              buildTimeDropdown('Min', roundMinutes, (value) {
                                 setState(() => roundMinutes = value ?? 0);
                               }),
-                              buildTimeDropdown('Segundos', roundSeconds, (value) {
+                              buildTimeDropdown('Sec', roundSeconds, (value) {
                                 setState(() => roundSeconds = value ?? 0);
                               }),
                             ],
@@ -192,10 +198,10 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              buildTimeDropdown('Minutos', restMinutes, (value) {
+                              buildTimeDropdown('Min', restMinutes, (value) {
                                 setState(() => restMinutes = value ?? 0);
                               }),
-                              buildTimeDropdown('Segundos', restSeconds, (value) {
+                              buildTimeDropdown('Sec', restSeconds, (value) {
                                 setState(() => restSeconds = value ?? 0);
                               }),
                             ],
@@ -203,13 +209,20 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
                           const SizedBox(height: 36),
                           ElevatedButton.icon(
                             style: AppStyles.gymButton.copyWith(
-                              minimumSize: MaterialStateProperty.all(const Size.fromHeight(54)),
+                              minimumSize: MaterialStateProperty.all(
+                                const Size.fromHeight(54),
+                              ),
                             ),
                             icon: const Icon(Icons.play_arrow, size: 28),
-                            label: const Text('Comenzar Entrenamiento', style: TextStyle(fontSize: 20)),
+                            label: const Text(
+                              'Empezar',
+                              style: TextStyle(fontSize: 20),
+                            ),
                             onPressed: () {
-                              int rounds = int.tryParse(roundsController.text) ?? 0;
-                              if (rounds > 0 && (roundMinutes > 0 || roundSeconds > 0)) {
+                              int rounds =
+                                  int.tryParse(roundsController.text) ?? 0;
+                              if (rounds > 0 &&
+                                  (roundMinutes > 0 || roundSeconds > 0)) {
                                 globalNumberOfRounds = rounds;
                                 globalRoundMinutes = roundMinutes;
                                 globalRoundSeconds = roundSeconds;
@@ -219,13 +232,14 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => CountdownScreen(
-                                      totalRounds: rounds,
-                                      roundMinutes: roundMinutes,
-                                      roundSeconds: roundSeconds,
-                                      restMinutes: restMinutes,
-                                      restSeconds: restSeconds,
-                                    ),
+                                    builder:
+                                        (context) => CountdownScreen(
+                                          totalRounds: rounds,
+                                          roundMinutes: roundMinutes,
+                                          roundSeconds: roundSeconds,
+                                          restMinutes: restMinutes,
+                                          restSeconds: restSeconds,
+                                        ),
                                   ),
                                 );
                               }
@@ -262,32 +276,59 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
     int value,
     ValueChanged<int?> onChanged,
   ) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: const Color(0xFFd7263d)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(label, style: const TextStyle(fontSize: 12)),
-          DropdownButton<int>(
-            value: value,
-            items:
-                minutesSeconds
-                    .map(
-                      (int value) => DropdownMenuItem<int>(
-                        value: value,
-                        child: Text(value.toString().padLeft(2, '0')),
-                      ),
-                    )
-                    .toList(),
-            onChanged: onChanged,
-            underline: Container(),
-          ),
-        ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Container(
+        width: 150, // Ajustar el ancho para que sea más rectangular
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.95),
+          borderRadius: BorderRadius.circular(
+            8,
+          ), // Ajustar el radio para que sea más rectangular
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 6,
+              offset: Offset(0, 2),
+            ),
+          ],
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        child: Row(
+          children: [
+            Expanded(
+              flex: 2,
+              child: Text(label, style: TextStyle(fontWeight: FontWeight.w500)),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              flex: 3,
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton<int>(
+                  value: value,
+                  isExpanded: true,
+                  dropdownColor: Colors.white,
+                  style: TextStyle(color: Colors.black, fontSize: 16),
+                  borderRadius: BorderRadius.circular(
+                    8,
+                  ), // Ajustar el radio del dropdown
+                  menuMaxHeight: 200,
+                  items:
+                      minutesSeconds.map((val) {
+                        return DropdownMenuItem(
+                          value: val,
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: Text(val.toString()),
+                          ),
+                        );
+                      }).toList(),
+                  onChanged: onChanged,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
