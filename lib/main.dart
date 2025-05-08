@@ -3,6 +3,7 @@ import 'package:flutter/services.dart'; // For SystemNavigator.pop()
 import 'workout.dart';
 import 'timer.dart';
 import 'styles.dart';
+import 'sparring.dart';
 
 void main() {
   runApp(const MMATimerApp());
@@ -49,7 +50,7 @@ class MainScreen extends StatelessWidget {
     {"title": "Workout", "icon": "💪"},
     {"title": "Settings", "icon": "⚙️"},
     {"title": "Info", "icon": "ℹ️"},
-    {"title": "Exit", "icon": "🚪"},
+    {"title": "Exit", "icon": "❌"},
   ];
 
   @override
@@ -105,7 +106,10 @@ class MainMenuButton extends StatelessWidget {
   void _handleNavigation(BuildContext context) {
     switch (title) {
       case "Sparring":
-        // TODO: Implementar pantalla de sparring
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const SparringScreen()),
+        );
         break;
       case "Timer":
         Navigator.push(
@@ -120,7 +124,20 @@ class MainMenuButton extends StatelessWidget {
         );
         break;
       case "Settings":
-        // TODO: Implementar pantalla de configuración
+        showDialog(
+          context: context,
+          builder:
+              (context) => AlertDialog(
+                title: const Text("Settings"),
+                content: const Text("This is screen is under construction"),
+                actions: [
+                  ElevatedButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text("Accept"),
+                  ),
+                ],
+              ),
+        );
         break;
       case "Info":
         showDialog(
@@ -128,7 +145,7 @@ class MainMenuButton extends StatelessWidget {
           builder:
               (context) => AlertDialog(
                 title: const Text("MMATimer"),
-                content: const Text("Gerald Bejarano, MMATimer beta 1.0.0"),
+                content: const Text("Gerald Bejarano, MMATimer beta 0.1.0"),
                 actions: [
                   ElevatedButton(
                     onPressed: () => Navigator.pop(context),

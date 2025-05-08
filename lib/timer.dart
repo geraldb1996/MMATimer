@@ -68,7 +68,7 @@ class _TimerScreenState extends State<TimerScreen> {
               Padding(
                 padding: const EdgeInsets.only(top: 32.0, bottom: 16.0),
                 child: Text(
-                  'Cronómetro',
+                  'Temporizador',
                   style: AppStyles.titulo.copyWith(fontSize: 32),
                   textAlign: TextAlign.center,
                 ),
