@@ -12,7 +12,6 @@ class WorkoutScreen extends StatefulWidget {
 }
 
 class _WorkoutScreenState extends State<WorkoutScreen> {
-  // Initialize controllers and fields with global values.
   late final TextEditingController roundsController;
   int roundMinutes = globalRoundMinutes;
   int roundSeconds = globalRoundSeconds;
@@ -72,19 +71,18 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
     );
   }
 
-  Widget buildDropdown(
+  Widget buildTimeDropdown(
     String label,
     int value,
-    List<int> items,
     ValueChanged<int?> onChanged,
   ) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Container(
-        width: 300,
+        width: 150,
         decoration: BoxDecoration(
           color: Colors.white.withOpacity(0.95),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(8),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.1),
@@ -109,10 +107,10 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
                   isExpanded: true,
                   dropdownColor: Colors.white,
                   style: TextStyle(color: Colors.black, fontSize: 16),
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(8),
                   menuMaxHeight: 200,
                   items:
-                      items.map((val) {
+                      minutesSeconds.map((val) {
                         return DropdownMenuItem(
                           value: val,
                           child: Align(
@@ -140,6 +138,19 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
   void dispose() {
     roundsController.dispose();
     super.dispose();
+  }
+
+  Widget _sectionHeader(IconData icon, String text) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Row(
+        children: [
+          Icon(icon, color: AppStyles.colorSecundario, size: 22),
+          const SizedBox(width: 8),
+          Text(text, style: AppStyles.subtitulo.copyWith(fontSize: 17)),
+        ],
+      ),
+    );
   }
 
   @override
@@ -257,84 +268,8 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
       ),
     );
   }
-
-  Widget _sectionHeader(IconData icon, String text) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
-      child: Row(
-        children: [
-          Icon(icon, color: AppStyles.colorSecundario, size: 22),
-          const SizedBox(width: 8),
-          Text(text, style: AppStyles.subtitulo.copyWith(fontSize: 17)),
-        ],
-      ),
-    );
-  }
-
-  Widget buildTimeDropdown(
-    String label,
-    int value,
-    ValueChanged<int?> onChanged,
-  ) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Container(
-        width: 150, // Ajustar el ancho para que sea más rectangular
-        decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.95),
-          borderRadius: BorderRadius.circular(
-            8,
-          ), // Ajustar el radio para que sea más rectangular
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 6,
-              offset: Offset(0, 2),
-            ),
-          ],
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-        child: Row(
-          children: [
-            Expanded(
-              flex: 2,
-              child: Text(label, style: TextStyle(fontWeight: FontWeight.w500)),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              flex: 3,
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<int>(
-                  value: value,
-                  isExpanded: true,
-                  dropdownColor: Colors.white,
-                  style: TextStyle(color: Colors.black, fontSize: 16),
-                  borderRadius: BorderRadius.circular(
-                    8,
-                  ), // Ajustar el radio del dropdown
-                  menuMaxHeight: 200,
-                  items:
-                      minutesSeconds.map((val) {
-                        return DropdownMenuItem(
-                          value: val,
-                          child: Align(
-                            alignment: Alignment.centerRight,
-                            child: Text(val.toString()),
-                          ),
-                        );
-                      }).toList(),
-                  onChanged: onChanged,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }
 
-// CountdownScreen remains the same.
 class CountdownScreen extends StatefulWidget {
   final int totalRounds;
   final int roundMinutes;
@@ -373,17 +308,24 @@ class _CountdownScreenState extends State<CountdownScreen> {
     currentRound = 1;
     isRoundPhase = true;
     remainingSeconds = roundTotalSeconds;
-    // Play bell at the start of the first round.
     playBell();
     startTimer();
   }
 
-  void playBell() {
-    _audioPlayer.play(AssetSource('lib/sounds/sndBell.wav'));
+  void playBell() async {
+    try {
+      await _audioPlayer.play(AssetSource('assets/lib/sounds/sndBell.wav'));
+    } catch (e) {
+      print('Error playing bell sound: $e');
+    }
   }
 
-  void playHorn() {
-    _audioPlayer.play(AssetSource('lib/sounds/sndHorn.wav'));
+  void playHorn() async {
+    try {
+      await _audioPlayer.play(AssetSource('assets/lib/sounds/sndHorn.wav'));
+    } catch (e) {
+      print('Error playing horn sound: $e');
+    }
   }
 
   void startTimer() {
@@ -394,7 +336,6 @@ class _CountdownScreenState extends State<CountdownScreen> {
             remainingSeconds--;
           } else {
             if (isRoundPhase) {
-              // End of round - play horn sound.
               playHorn();
               if (currentRound == widget.totalRounds) {
                 timer?.cancel();
@@ -417,11 +358,9 @@ class _CountdownScreenState extends State<CountdownScreen> {
                 );
               } else {
                 if (restTotalSeconds > 0) {
-                  // Switch to rest phase.
                   isRoundPhase = false;
                   remainingSeconds = restTotalSeconds;
                 } else {
-                  // No rest phase; immediately start next round.
                   currentRound++;
                   playBell();
                   isRoundPhase = true;
@@ -429,7 +368,6 @@ class _CountdownScreenState extends State<CountdownScreen> {
                 }
               }
             } else {
-              // End of rest phase: start next round.
               currentRound++;
               playBell();
               isRoundPhase = true;
@@ -477,67 +415,66 @@ class _CountdownScreenState extends State<CountdownScreen> {
   Widget build(BuildContext context) {
     final phaseText = isRoundPhase ? 'Round' : 'Rest';
     return Scaffold(
-      // Use a light background color or your gradient
-      backgroundColor: AppStyles.colorGrisClaro,
-      appBar: AppBar(
-        title: const Text("Countdown"),
-        backgroundColor: AppStyles.colorPrimario,
-        foregroundColor: AppStyles.colorGrisClaro,
-      ),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: AppStyles.fondo, // Optional: use your gym gradient
-        ),
-        child: Center(
+      backgroundColor: Colors.black,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 24),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Round $currentRound of ${widget.totalRounds}',
-                style: TextStyle(
-                  fontSize: 24,
-                  color: AppStyles.colorSecundario,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                '$phaseText Phase',
-                style: TextStyle(
+                'Round $currentRound / ${widget.totalRounds}',
+                style: const TextStyle(
                   fontSize: 32,
+                  color: Colors.white,
                   fontWeight: FontWeight.bold,
-                  color: AppStyles.colorSecundario,
                 ),
               ),
-              const SizedBox(height: 20),
+              Text(
+                phaseText,
+                style: const TextStyle(fontSize: 28, color: Colors.white70),
+              ),
               Text(
                 formatTime(remainingSeconds),
-                style: TextStyle(
-                  fontSize: 100,
+                style: const TextStyle(
+                  fontSize: 90,
+                  color: Colors.white,
                   fontWeight: FontWeight.bold,
-                  color: AppStyles.colorGrisClaro,
+                  letterSpacing: 6,
                 ),
               ),
-              const SizedBox(height: 30),
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  ElevatedButton(
-                    style: AppStyles.gymButton,
-                    onPressed: () {
-                      if (isPaused) {
-                        resumeTimer();
-                      } else {
-                        pauseTimer();
-                      }
-                    },
-                    child: Text(isPaused ? 'Resume' : 'Pause'),
-                  ),
-                  const SizedBox(width: 20),
-                  ElevatedButton(
-                    style: AppStyles.gymButton,
+                  ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 18,
+                        vertical: 14,
+                      ),
+                    ),
+                    icon: const Icon(Icons.stop, size: 28),
+                    label: const Text('Stop', style: TextStyle(fontSize: 18)),
                     onPressed: stopTimer,
-                    child: const Text("Stop"),
+                  ),
+                  ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 18,
+                        vertical: 14,
+                      ),
+                    ),
+                    icon: Icon(
+                      isPaused ? Icons.play_arrow : Icons.pause,
+                      size: 28,
+                    ),
+                    label: Text(
+                      isPaused ? 'Resume' : 'Pause',
+                      style: const TextStyle(fontSize: 18),
+                    ),
+                    onPressed: isPaused ? resumeTimer : pauseTimer,
                   ),
                 ],
               ),

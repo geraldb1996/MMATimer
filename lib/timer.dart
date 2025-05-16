@@ -59,7 +59,7 @@ class _TimerScreenState extends State<TimerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppStyles.colorSelection,
+      backgroundColor: AppStyles.colorPrimario,
       body: Container(
         decoration: BoxDecoration(gradient: AppStyles.fondo),
         child: SafeArea(
@@ -102,21 +102,46 @@ class _TimerScreenState extends State<TimerScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              _buildTimerButton(
-                                onPressed: isRunning ? null : startTimer,
-                                icon: Icons.play_arrow,
-                                label: 'Iniciar',
+                              ElevatedButton(
+                                onPressed: isRunning ? pauseTimer : startTimer,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                      isRunning ? Colors.blue : Colors.green,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 40,
+                                    vertical: 16,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                child: Text(
+                                  isRunning ? 'Pausar' : 'Iniciar',
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                               ),
-                              _buildTimerButton(
-                                onPressed: isRunning ? pauseTimer : null,
-                                icon: Icons.pause,
-                                label: 'Pausar',
-                              ),
-                              _buildTimerButton(
-                                onPressed:
-                                    elapsedSeconds > 0 ? resetTimer : null,
-                                icon: Icons.refresh,
-                                label: 'Reiniciar',
+                              ElevatedButton(
+                                onPressed: resetTimer,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.red,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 40,
+                                    vertical: 16,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                child: const Text(
+                                  'Reiniciar',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                               ),
                             ],
                           ),
@@ -130,36 +155,6 @@ class _TimerScreenState extends State<TimerScreen> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildTimerButton({
-    required VoidCallback? onPressed,
-    required IconData icon,
-    required String label,
-  }) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        ElevatedButton(
-          style: AppStyles.gymButton.copyWith(
-            backgroundColor: MaterialStateProperty.resolveWith<Color>((
-              Set<MaterialState> states,
-            ) {
-              if (states.contains(MaterialState.disabled)) {
-                return Colors.grey.shade400;
-              }
-              return AppStyles.colorSecundario;
-            }),
-            foregroundColor: MaterialStateProperty.all(AppStyles.colorPrimario),
-            padding: MaterialStateProperty.all(const EdgeInsets.all(18)),
-          ),
-          onPressed: onPressed,
-          child: Icon(icon, size: 28),
-        ),
-        const SizedBox(height: 8),
-        Text(label, style: AppStyles.subtitulo.copyWith(fontSize: 15)),
-      ],
     );
   }
 }

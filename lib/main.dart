@@ -106,9 +106,19 @@ class MainMenuButton extends StatelessWidget {
   void _handleNavigation(BuildContext context) {
     switch (title) {
       case "Sparring":
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const SparringScreen()),
+        showDialog(
+          context: context,
+          builder:
+              (context) => AlertDialog(
+                title: const Text("Sparring"),
+                content: const Text("This is screen is under construction"),
+                actions: [
+                  ElevatedButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text("Accept"),
+                  ),
+                ],
+              ),
         );
         break;
       case "Timer":
